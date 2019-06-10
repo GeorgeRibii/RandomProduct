@@ -16,6 +16,6 @@ namespace RandomProduct.Contracts
 
         bool Clear();
 
-        string Display();
+        BasketSummary Summary();
     }
 }

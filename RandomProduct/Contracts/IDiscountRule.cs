@@ -18,5 +18,7 @@ namespace RandomProduct.Contracts
         /// <param name="basket"></param>
         /// <returns></returns>
         DiscountRuleResult ReviseBasket(Basket basket);
+
+        Action<ProductInBasket> Action { get; }
     }
 }

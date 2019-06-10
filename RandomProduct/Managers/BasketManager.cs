@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using RandomProduct.Contracts;
+using RandomProduct.Models.Domain.Enums;
 using RandomProduct.Models.Domain.Models;
 
 namespace RandomProduct.Managers
@@ -59,9 +61,24 @@ namespace RandomProduct.Managers
             return _basket.IsEmpty;
         }
 
-        public string Display()
+        public BasketSummary Summary()
         {
-            throw new NotImplementedException();
+            if (_basket.IsEmpty)
+                return null;
+
+            var finalProducts = ApplyRulesSet(_basket, _appliedDiscountRules);
+
+            var groupedProducts = finalProducts.GroupBy(p => p.Id);
+            var basketSummaryProducts = new List<BasketSummaryProduct>(0);
+            foreach (var productsGroup in groupedProducts)
+            {
+                basketSummaryProducts.Add(new BasketSummaryProduct(
+                    productsGroup.First(), 
+                    productsGroup.Count(),
+                    productsGroup.Sum(p => p.Cost)));
+            }
+
+            return new BasketSummary(basketSummaryProducts);
         }
 
         private void RefreshDiscountRules()
@@ -69,6 +86,27 @@ namespace RandomProduct.Managers
             var results = _discountEngine.ReviseBasket(_basket);
             _appliedDiscountRules.Clear();
             _appliedDiscountRules.AddRange(results);
+        }
+
+        private IEnumerable<ProductInBasket> ApplyRulesSet(Basket basket,
+            IEnumerable<DiscountRuleResult> rulesResults)
+        {
+            var products = basket.GetAll();
+
+            foreach (var discountRuleResult in rulesResults.Where(r => r.DiscountRuleType == DiscountRuleType.Discount))
+            {
+                foreach (var productInBasket in products.Where(x => discountRuleResult.ProductIds.Contains(x.ProductInBasketId)))
+                {
+                    discountRuleResult.Action.Invoke(productInBasket);
+                }
+            }
+
+            foreach (var discountRuleResult in rulesResults.Where(r => r.DiscountRuleType == DiscountRuleType.Extra))
+            {
+                products.AddRange(discountRuleResult.AdditionalProducts);
+            }
+
+            return products;
         }
     }
 }

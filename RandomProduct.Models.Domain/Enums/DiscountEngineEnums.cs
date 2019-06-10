@@ -4,8 +4,9 @@ using System.Text;
 
 namespace RandomProduct.Models.Domain.Enums
 {
-    public enum DiscountRuleTarget
+    public enum DiscountRuleType
     {
-
+        Discount = 1,
+        Extra = 2
     }
 }

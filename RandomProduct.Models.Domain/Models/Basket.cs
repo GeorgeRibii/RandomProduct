@@ -10,16 +10,14 @@ namespace RandomProduct.Models.Domain.Models
     public class Basket
     {
         private readonly List<ProductInBasket> _products;
-        private readonly List<DiscountRuleResult> _appliedDiscountRules;
+        
 
         public Basket()
         {
             _products = new List<ProductInBasket>(0);
-            _appliedDiscountRules = new List<DiscountRuleResult>(0);
         }
 
         public bool IsEmpty => _products.Count == 0;
-        public bool IsRuleApplied(Guid ruleId) => _appliedDiscountRules.Any(x => x.DiscountRuleId == ruleId);
 
         public void Add(Product product)
         {
@@ -38,20 +36,19 @@ namespace RandomProduct.Models.Domain.Models
             return _products.Remove(product.ToProductInBasket());
         }
 
+        public bool BatchRemove(string id)
+        {
+            return _products.RemoveAll(x => x.Id.Equals(id, StringComparison.InvariantCultureIgnoreCase)) > 0;
+        }
+
         public void Clear()
         {
             _products.Clear();
         }
 
-        public IEnumerable<ProductInBasket> GetAll()
+        public List<ProductInBasket> GetAll()
         {
             return _products.ToList(); // Avoid returning reference but copy
-        }
-
-        public void UpdateRules(IEnumerable<DiscountRuleResult> rulesResults)
-        {
-            _appliedDiscountRules.Clear();
-            _appliedDiscountRules.AddRange(rulesResults);
         }
     }
 }
