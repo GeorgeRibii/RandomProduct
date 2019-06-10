@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using RandomProduct.Contracts;
+using RandomProduct.Extensions;
 using RandomProduct.Models.Domain.Constants;
 using RandomProduct.Models.Domain.Models;
 
@@ -25,9 +26,13 @@ namespace RandomProduct.Engines.Discount.Rules
                 .Where(x => x.Id.Equals(Constants.ProductIds.BAG_OF_POGS_ID,
                     StringComparison.InvariantCultureIgnoreCase))
                 .Skip(1)
-                .Select(p =>
+                .Select(x =>
                 {
-                    p.Cost = p.Cost / 2;
+                    var p = new ProductInBasket(x)
+                    {
+                        Cost = x.Cost / 2
+                    };
+
                     return p;
                 });
 

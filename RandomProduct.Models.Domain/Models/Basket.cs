@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -45,6 +46,12 @@ namespace RandomProduct.Models.Domain.Models
         public IEnumerable<ProductInBasket> GetAll()
         {
             return _products.ToList(); // Avoid returning reference but copy
+        }
+
+        public void UpdateRules(IEnumerable<DiscountRuleResult> rulesResults)
+        {
+            _appliedDiscountRules.Clear();
+            _appliedDiscountRules.AddRange(rulesResults);
         }
     }
 }

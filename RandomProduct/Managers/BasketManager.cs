@@ -11,34 +11,45 @@ namespace RandomProduct.Managers
         private readonly IDiscountEngine _discountEngine;
 
         private readonly Basket _basket;
+        private readonly List<DiscountRuleResult> _appliedDiscountRules;
 
         public BasketManager(IDiscountEngine discountEngine)
         {
             _discountEngine = discountEngine;
 
             _basket = new Basket();
+            _appliedDiscountRules = new List<DiscountRuleResult>(0);
         }
 
-        public bool Add(Product product)
+        public void Add(Product product)
         {
             _basket.Add(product);
-
-            var reviseResult = _discountEngine.ReviseBasket(_basket);
+            RefreshDiscountRules();
         }
 
         public bool Remove(Product product)
         {
-            throw new NotImplementedException();
+            var result = _basket.Remove(product);
+            RefreshDiscountRules();
+
+            return result;
         }
 
         public bool Remove(string id)
         {
-            throw new NotImplementedException();
+            var result = _basket.Remove(id);
+            RefreshDiscountRules();
+
+            return result;
         }
 
         public bool BatchRemove(string id)
         {
-            throw new NotImplementedException();
+            var result = _basket.BatchRemove(id);
+
+            RefreshDiscountRules();
+
+            return result;
         }
 
         public bool Clear()
@@ -53,9 +64,11 @@ namespace RandomProduct.Managers
             throw new NotImplementedException();
         }
 
-        private void ApplyDiscountRulesResults(IEnumerable<DiscountRuleResult> discountRulesResults)
+        private void RefreshDiscountRules()
         {
-
+            var results = _discountEngine.ReviseBasket(_basket);
+            _appliedDiscountRules.Clear();
+            _appliedDiscountRules.AddRange(results);
         }
     }
 }

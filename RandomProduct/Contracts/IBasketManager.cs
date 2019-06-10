@@ -7,7 +7,7 @@ namespace RandomProduct.Contracts
 {
     public interface IBasketManager
     {
-        bool Add(Product product);
+        void Add(Product product);
 
         bool Remove(Product product);
         bool Remove(string id);

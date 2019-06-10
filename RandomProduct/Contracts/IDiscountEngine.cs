@@ -19,13 +19,13 @@ namespace RandomProduct.Contracts
         /// </summary>
         /// <param name="rule"></param>
         /// <returns></returns>
-        bool RegisterDiscountRule(IDiscountRule rule);
+        void RegisterDiscountRule(IDiscountRule rule);
 
         /// <summary>
         /// Registers set of discount rules
         /// </summary>
         /// <param name="rules"></param>
         /// <returns></returns>
-        bool RegisterDiscountRules(IEnumerable<IDiscountRule> rules);
+        void RegisterDiscountRules(IEnumerable<IDiscountRule> rules);
     }
 }

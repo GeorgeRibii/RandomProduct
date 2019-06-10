@@ -8,9 +8,16 @@ namespace RandomProduct.Models.Domain.Models
     {
         public Guid ProductInBasketId { get; set; }
 
-        public ProductInBasket(Product product) : base(product)
+        public ProductInBasket(Product product) 
+            : base(product)
         {
             ProductInBasketId = Guid.NewGuid();
+        }
+
+        public ProductInBasket(ProductInBasket productInBasket)
+            :base(productInBasket)
+        {
+            ProductInBasketId = productInBasket.ProductInBasketId;
         }
     }
 }

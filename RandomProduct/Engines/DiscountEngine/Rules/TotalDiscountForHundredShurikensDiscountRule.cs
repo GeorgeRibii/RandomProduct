@@ -18,9 +18,10 @@ namespace RandomProduct.Engines.Discount.Rules
                     x.Id.Equals(Constants.ProductIds.SHURIKEN_ID, StringComparison.InvariantCultureIgnoreCase)) < 100)
                 return null;
 
-            var changeSet = products.Select(p =>
+            var changeSet = products.Select(x =>
             {
-                p.Cost = p.Cost - p.Cost * 0.3M;
+                var p = new ProductInBasket(x) {Cost = x.Cost - x.Cost * 0.3M};
+
                 return p;
             });
 
